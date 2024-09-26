@@ -15,11 +15,11 @@ const cookieExtractor = function(req) {
 };
 
 const opts = {
-    jwtFromRequest: cookieExtractor,  // Usar el extractor personalizado para cookies
+    jwtFromRequest: cookieExtractor,  
     secretOrKey: process.env.JWT_SECRET || 'your_jwt_secret'
 };
 
-// Estrategia JWT para proteger rutas
+
 passport.use('jwt', new JwtStrategy(opts, async (jwt_payload, done) => {
     try {
         const user = await User.findById(jwt_payload.id);
@@ -32,7 +32,7 @@ passport.use('jwt', new JwtStrategy(opts, async (jwt_payload, done) => {
     }
 }));
 
-// Estrategia de login (ya estaba definida)
+
 passport.use('login', new LocalStrategy(
     {
         usernameField: 'email',
@@ -46,7 +46,7 @@ passport.use('login', new LocalStrategy(
                 return done(null, false, { message: 'Usuario no encontrado' });
             }
 
-            // Utiliza isValidPassword para validar la contraseña
+           
             if (!isValidPassword(password, user)) {
                 return done(null, false, { message: 'Contraseña incorrecta' });
             }
@@ -58,7 +58,7 @@ passport.use('login', new LocalStrategy(
     }
 ));
 
-// Serialización y deserialización de usuarios
+
 passport.serializeUser((user, done) => {
     done(null, user._id);
 });
