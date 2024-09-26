@@ -15,7 +15,7 @@ router.post('/register', async (req, res) => {
     const { first_name, last_name, email, age, password } = req.body;
 
     try {
-        // Verifica si el usuario ya existe
+        
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'El correo ya está en uso.' });
@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
             cart: null
         });
 
-        console.log('Password antes de guardar:', newUser.password);  // Verificar el password
+        console.log('Password antes de guardar:', newUser.password);  
         await newUser.save();
 
         res.status(201).json({ message: 'Usuario registrado exitosamente.' });
@@ -50,12 +50,12 @@ router.get('/login', (req, res) => {
 router.post('/login', (req, res, next) => {
     passport.authenticate('login', (err, user, info) => {
         if (err) {
-            console.error('Error en la autenticación:', err);  // Imprime detalles del error
-            return res.status(500).json({ message: 'Error en el servidor', error: err.message });  // Añade el mensaje de error
+            console.error('Error en la autenticación:', err);  
+            return res.status(500).json({ message: 'Error en el servidor', error: err.message });  
         }
 
         if (!user) {
-            console.log('Información de error:', info);  // Log para depurar si no hay usuario
+            console.log('Información de error:', info);  
             return res.status(400).json({ message: info ? info.message : 'Error en el login' });
         }
 
@@ -65,12 +65,12 @@ router.post('/login', (req, res, next) => {
                 return next(err);
             }
 
-            // Crea el token JWT y lo guarda en una cookie
+            
             const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' });
             res.cookie('jwt', token, { httpOnly: true });
 
-            // Redirigir a la vista de bienvenida
-            return res.redirect('/api/sessions/current');  // Redirige a la ruta que renderiza la vista de bienvenida
+           
+            return res.redirect('/api/sessions/current'); 
         });
     })(req, res, next);
 });
