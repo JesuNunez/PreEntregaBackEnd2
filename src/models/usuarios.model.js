@@ -8,12 +8,12 @@ const userSchema = new Schema({
     last_name: String,
     email: { type: String, unique: true },
     age: Number,
-    password: String,  // El campo password debe ser String
+    password: String,  
     cart: { type: Schema.Types.ObjectId, ref: 'Cart' },
     role: { type: String, default: 'user' }
 });
 
-// Método para encriptar la contraseña antes de guardar
+
 userSchema.pre('save', function (next) {
     if (!this.isModified('password')) return next();
     
@@ -22,7 +22,7 @@ userSchema.pre('save', function (next) {
     next();
 });
 
-// Método para comparar contraseñas
+
 userSchema.methods.isValidPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
